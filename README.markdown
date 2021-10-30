@@ -7,6 +7,69 @@ Mooneye Test Suite is a suite of Game Boy test ROMs.
 For documentation about known behaviour, see [Game Boy: Complete Technical
 Reference](https://github.com/Gekkio/gb-ctr)
 
+## Suite structure
+
+* `acceptance`: the main "acceptance" tests which form the bulk of the test suite and are easily verifiable on hardware
+* `emulator-only`: tests that are complicated to verify on hardware (e.g. require special test hardware), so they are commonly executed only on emulators
+* `madness`: nope
+* `manual-only`: tests that require manual verification (e.g. looking at the screen, or listening to audio) on real hardware
+* `misc`: extra tests for CGB / AGB hardware that are not part of the main suite
+* `utils`: utilities that are not really tests, but might be useful to some people
+
+## Test naming
+
+Some tests are expected to pass only a single console model:
+
+* dmg = Game Boy
+* mgb = Game Boy Pocket
+* sgb = Super Game Boy
+* sgb2 = Super Game Boy 2
+* cgb = Game Boy Color
+* agb = Game Boy Advance
+* ags = Game Boy Advance SP
+
+In addition to model differences, SoC revisions can affect the behaviour.
+Revision 0 refers always to the initial version of a SoC (e.g. CPU CGB). AGB
+and AGS use the same SoC models, but in two different packages. The following
+SoC models have several revisions:
+
+* DMG: 0, A, B, C
+* CGB: 0, A, B, C, D, E
+* AGB: 0, A, A E, B, B E. Revision E also exists, but only in Game Boy Micro
+  (OXY) so it is out of this project's scope. However, A E and B E are most
+  likely actually just E revision in A or B-compatible package.
+
+In general, hardware can be divided to a couple of groups based on their
+behaviour. Some tests are expected to pass on a single or multiple groups:
+
+* G = dmg+mgb
+* S = sgb+sgb2
+* C = cgb+agb+ags
+* A = agb+ags
+
+For example, a test with GS in the name is expected to pass on dmg+mgb +
+sgb+sgb2.
+
+## Pass/fail reporting
+
+Most tests report a single pass/fail state using [a simple protocol](https://github.com/Gekkio/mooneye-test-suite/blob/1fbf1f76fcf9f1fc6a6023d9a141a826965133e8/common/lib/quit.s#L49) which is
+designed to make it easy to detect the test result in both emulators and real
+hardware. On real hardware you can use the link port to read data sent by the
+test ROM. In emulators you can either use the link port, or detect the
+use of the `LD B, B` opcode, which is used as a "debug breakpoint" in some
+emulators.
+
+A passing test:
+
+- writes the Fibonacci numbers 3/5/8/13/21/34 to the registers B/C/D/E/H/L
+- executes an `LD B, B` opcode
+- sends the same Fibonacci numbers using the link port. In emulators, the serial interrupt doesn't need to be implemented since the mechanism uses busy looping to wait for the transfer to complete instead of relying on the interrupt
+
+A failing test:
+
+- executes an `LD B, B` opcode, but the B/C/D/E/H/L registers won't contain the "magic" Fibonacci numbers
+- sends the byte `0x42` 6 times using the serial port
+
 ## Hardware testing
 
 There's tons of documentation and tons of emulators in the internet, but in the
@@ -22,7 +85,7 @@ developing emulation for a feature:
 
 All test ROMs are manually run with these devices:
 
-| Device              | Model    | Mainboard    | CPU              | Detailed information                                                            |
+| Device              | Model    | Mainboard    | SoC              | Detailed information                                                            |
 | ------------------- | -------- | ------------ | ---------------- | ---------------                                                                 |
 | Game Boy            | DMG-01   | DMG-CPU-01   | DMG-CPU          | [G01176542](https://gbhwdb.gekkio.fi/consoles/dmg/G01176542.html)               |
 | Game Boy            | DMG-01   | DMG-CPU-02   | DMG-CPU A        | [G02487032](https://gbhwdb.gekkio.fi/consoles/dmg/G02487032.html)               |
@@ -57,7 +120,7 @@ The main "test fleet" is already very big, so I only test on these devices if
 there's evidence of behaviour that depends on mainboard revision or individual
 units.
 
-| Device              | Model    | Mainboard    | CPU              | Detailed information                                                          |
+| Device              | Model    | Mainboard    | SoC              | Detailed information                                                          |
 | ------------------- | -------- | ------------ | -----------      | ----                                                                          |
 | Game Boy            | DMG-01   | DMG-CPU-01   | DMG-CPU          | [G01036814](https://gbhwdb.gekkio.fi/consoles/dmg/G01036814.html)             |
 | Game Boy            | DMG-01   | DMG-CPU-03   | DMG-CPU B        | [G06551776](https://gbhwdb.gekkio.fi/consoles/dmg/G06551776.html)             |
