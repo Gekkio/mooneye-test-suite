@@ -1,0 +1,41 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    name: Build test ROMs
+    runs-on: ubuntu-latest
+    env:
+      WLA_DX_REPO: vhelin/wla-dx
+      WLA_DX_COMMIT: eba3774e8d06f9d92f7ec1d4f39a0f3b9a92b27d
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Update Ubuntu package lists
+        run: sudo apt update
+        if: runner.os == 'Linux'
+      - name: Install Ubuntu packages
+        run: sudo apt install cmake
+      - name: Cache wla-dx
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ~/wla-dx
+          key: ${{ runner.os }}-${{ env.WLA_DX_COMMIT }}-wla-dx
+      - name: Build wla-dx
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: .github/scripts/install_wla-dx.sh
+      - name: Build test ROMs
+        run: make clean all
+        env:
+          WLA: ~/wla-dx/binaries/wla-gb
+          WLALINK: ~/wla-dx/binaries/wlalink
+      - name: Persist built test ROMs
+        uses: actions/upload-artifact@v1
+        with:
+          name: tests
+          path: build
