@@ -67,3 +67,6 @@ jobs:
           echo MTS_VERSION="$(date +%Y%m%d-%H%M)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Prepare release
         run: .github/scripts/prepare_release.sh mts-"${MTS_VERSION}"
+      - name: Upload to S3
+        run: |
+          aws s3 cp build/mts-"${MTS_VERSION}".zip build/mts-"${MTS_VERSION}".tar.gz build/mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
