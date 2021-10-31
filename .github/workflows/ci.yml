@@ -69,4 +69,6 @@ jobs:
         run: .github/scripts/prepare_release.sh mts-"${MTS_VERSION}"
       - name: Upload to S3
         run: |
-          aws s3 cp build/mts-"${MTS_VERSION}".zip build/mts-"${MTS_VERSION}".tar.gz build/mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
+          aws s3 cp build/mts-"${MTS_VERSION}".zip s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
+          aws s3 cp build/mts-"${MTS_VERSION}".tar.gz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
+          aws s3 cp build/mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
