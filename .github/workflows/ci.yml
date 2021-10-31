@@ -79,3 +79,4 @@ jobs:
           aws s3 cp mts-"${MTS_VERSION}".tar.gz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           aws s3 cp mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --region eu-west-1 --upload
+          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts" --title "Mooneye Test Suite" --region eu-west-1 --upload
