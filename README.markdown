@@ -4,8 +4,10 @@ Mooneye Test Suite is a suite of Game Boy test ROMs.
 
 [![Build Status](https://github.com/Gekkio/mooneye-test-suite/workflows/ci/badge.svg)](https://github.com/Gekkio/mooneye-test-suite/actions)
 
-For documentation about known behaviour, see [Game Boy: Complete Technical
-Reference](https://github.com/Gekkio/gb-ctr)
+[Prebuilt binary test ROMs are available here](https://gekkio.fi/files/mooneye-test-suite/). They are automatically
+built and deployed whenever there's new changes in the main branch.
+
+For documentation about known behaviour, see [Game Boy: Complete Technical Reference](https://github.com/Gekkio/gb-ctr)
 
 ## Suite structure
 
