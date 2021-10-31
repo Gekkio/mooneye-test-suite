@@ -45,6 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Update Ubuntu package lists
         run: sudo apt update
       - name: Install Ubuntu packages

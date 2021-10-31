@@ -2,10 +2,6 @@
 set -euo pipefail
 
 NAME="${1}"
-#
-# VERSION=$(git rev-list --count main)
-# REV=$(git rev-parse --short HEAD)
-# NAME="mooneye-test-suite-v${VERSION}-${REV}"
 
 cp -r build "${NAME}"
 find "${NAME}" -type f -not '(' -name '*.sym' -or -name '*.gb' ')' -delete
