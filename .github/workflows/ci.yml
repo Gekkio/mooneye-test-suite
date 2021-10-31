@@ -51,6 +51,12 @@ jobs:
         run: sudo apt update
       - name: Install Ubuntu packages
         run: sudo apt install awscli
+      - name: Install s3-indexer
+        run: |
+          mkdir -p "$HOME/bin"
+          curl -sSL https://gekkio.fi/files/s3-indexer/s3-indexer -o "$HOME/bin/s3-indexer"
+          chmod +x "$HOME/bin/s3-indexer"
+          echo "$HOME/bin" >> $GITHUB_PATH
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -72,3 +78,4 @@ jobs:
           aws s3 cp mts-"${MTS_VERSION}".zip s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           aws s3 cp mts-"${MTS_VERSION}".tar.gz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           aws s3 cp mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
+          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --region eu-west-1 --upload
