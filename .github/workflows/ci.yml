@@ -39,3 +39,29 @@ jobs:
         with:
           name: tests
           path: build
+  deploy:
+    name: Deploy release ZIP
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Update Ubuntu package lists
+        run: sudo apt update
+      - name: Install Ubuntu packages
+        run: sudo apt install awscli
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Download built test ROMs
+        uses: actions/download-artifact@v1
+        with:
+          name: tests
+          path: build
+      - name: Generate version identifier
+        run: |
+          echo MTS_VERSION="$(date +%Y%m%d-%H%M)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Prepare release
+        run: .github/scripts/prepare_release.sh mts-"${MTS_VERSION}"
