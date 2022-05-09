@@ -54,6 +54,7 @@
 
 .licenseecodenew "ZZ"
 .cartridgetype CART_TYPE
+.romsize
 .ramsize CART_RAM_SIZE
 .countrycode $01
 .nintendologo

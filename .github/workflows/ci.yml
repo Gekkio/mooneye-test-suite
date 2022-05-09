@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WLA_DX_REPO: vhelin/wla-dx
-      WLA_DX_COMMIT: c3cfb15ce2cabc2b7223a92776f84879619cf051
+      WLA_DX_COMMIT: d8b51a99ff1d8c9cb64ba4db90191718508f9c98
     steps:
       - name: Checkout
         uses: actions/checkout@v2
