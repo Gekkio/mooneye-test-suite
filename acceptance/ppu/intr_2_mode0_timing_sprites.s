@@ -267,7 +267,7 @@ prepare_sprites:
   ld (hl+), a
   ; Sprite X
   ld a, (de)
-  ld (hl+) ,a
+  ld (hl+), a
   ; Sprite tile
   ld a, b
   ld (hl+), a
