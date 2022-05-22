@@ -83,6 +83,7 @@ expected_banks:
 ; (e.g. mooneye-gb)
 
 .repeat CART_ROM_BANKS INDEX bank
+.ifgr bank 0
 .bank bank
 .org $0104
 .db $CE $ED $66 $66 $CC $0D $00 $0B $03 $73 $00 $83 $00 $0C $00 $0D
@@ -94,4 +95,5 @@ expected_banks:
 
 .db $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00
 .db $00 $00 $00 $00 $00 $00 $00 $00 $00 $E7 $00 $00 $00 $00 $00 $00
+.endif
 .endr
