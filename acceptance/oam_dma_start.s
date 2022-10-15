@@ -55,8 +55,9 @@
 test_round1:
   ld hl, vector_10
   ld a, <fail_round1
-  ld (hl-), a
+  ld (hl+), a
   ld a, >fail_round1
+  ld (hl+), a
 
   ld hl, vector_38
   ld a, <finish_round1
@@ -101,8 +102,9 @@ test_round2:
 
   ld hl, vector_10
   ld a, <fail_round2
-  ld (hl-), a
+  ld (hl+), a
   ld a, >fail_round2
+  ld (hl+), a
 
   ld hl, vector_38
   ld a, <finish_round2
