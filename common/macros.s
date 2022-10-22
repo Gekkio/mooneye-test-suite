@@ -54,7 +54,6 @@ _delay_long_time_\@:
 .macro halt_execution
   magic_breakpoint
 @halt_execution_\@:
-  nop
   jr @halt_execution_\@
 .endm
 
