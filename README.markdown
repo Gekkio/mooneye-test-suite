@@ -65,7 +65,10 @@ A passing test:
 
 - writes the Fibonacci numbers 3/5/8/13/21/34 to the registers B/C/D/E/H/L
 - executes an `LD B, B` opcode
-- sends the same Fibonacci numbers using the link port. In emulators, the serial interrupt doesn't need to be implemented since the mechanism uses busy looping to wait for the transfer to complete instead of relying on the interrupt
+- sends the same Fibonacci numbers using the link port. In emulators, the
+  serial interrupt doesn't need to be implemented since the mechanism uses busy
+  looping to wait for the transfer to complete instead of relying on the
+  interrupt
 - executes an `LD B, B` opcode, followed by an infinite JR loop (JR pointing to itself)
 
 A failing test:
@@ -76,7 +79,7 @@ A failing test:
 - executes an `LD B, B` opcode, followed by an infinite JR loop (JR pointing to itself)
 
 If you don't have a full Game boy system, pass/fail reporting can be sped up by
-making sure LY (0xff44) and SC (0xff01) both return 0xff when read. This will
+making sure LY (`0xff44`) and SC (`0xff02`) both return 0xff when read. This will
 bypass some unnecessary drawing code and waiting for serial transfer to finish.
 
 ## Hardware testing
