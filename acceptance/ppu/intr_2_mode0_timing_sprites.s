@@ -198,8 +198,7 @@ _testcase_end_\@:
 run_testcase:
   push de
   push hl
-  wait_vblank
-  disable_ppu
+  call disable_ppu_safe
   call clear_oam
 
   pop de

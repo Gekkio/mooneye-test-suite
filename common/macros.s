@@ -57,11 +57,6 @@ _delay_long_time_\@:
   jr @halt_execution_\@
 .endm
 
-.macro disable_ppu
-  ld hl, LCDC
-  res 7, (hl)
-.endm
-
 .macro enable_lcd
   ld hl, LCDC
   set 7, (hl)
