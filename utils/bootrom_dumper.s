@@ -72,7 +72,7 @@ finish:
   ld a, c
   ldh ($80), a
 
-  @check_lcd:
+  @check_ppu:
     ldh a, (<LCDC)
     and %10000000
     jr z, @clear_tilemap
