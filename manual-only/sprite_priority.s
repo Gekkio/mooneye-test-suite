@@ -52,7 +52,7 @@
   ld hl, LCDC
   set 1, (HL)
 
-  enable_lcd
+  enable_ppu
   wait_vblank
   wait_vblank
   halt_execution

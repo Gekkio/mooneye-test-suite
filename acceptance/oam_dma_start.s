@@ -74,7 +74,7 @@ test_round1:
   ld a, $77   ; LD (HL), A
   ld (hl), a
 
-  enable_lcd
+  enable_ppu
   wait_vblank
 
   ld b, $00
@@ -123,7 +123,7 @@ test_round2:
   ld a, $77   ; LD (HL), A
   ld (hl), a
 
-  enable_lcd
+  enable_ppu
   wait_vblank
 
   ld b, $00

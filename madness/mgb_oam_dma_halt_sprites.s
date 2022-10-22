@@ -85,7 +85,7 @@
   ld hl, LCDC
   set 1, (HL)
 
-  enable_lcd
+  enable_ppu
   wait_vblank
   run_hiram_test
 

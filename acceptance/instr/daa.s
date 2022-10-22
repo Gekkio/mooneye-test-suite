@@ -149,7 +149,7 @@ fail:
   swap a
   call print_bin4
 
-  enable_lcd
+  enable_ppu
   wait_vblank
   halt_execution
 

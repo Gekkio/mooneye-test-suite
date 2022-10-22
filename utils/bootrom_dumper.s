@@ -141,7 +141,7 @@ finish:
     xor a
     ldh (<NR13), a
 
-  @enable_lcd:
+  @enable_ppu:
     ld hl, LCDC
     set 7, (hl)
 

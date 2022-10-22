@@ -38,7 +38,7 @@ quit:
   ret
 
   @cb_return:
-    enable_lcd
+    enable_ppu
     wait_vblank
     ; Extra vblank to account for initial (invisible) frame
     wait_vblank

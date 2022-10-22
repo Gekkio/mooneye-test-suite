@@ -45,7 +45,7 @@
   call reset_screen
   call print_load_font
 
-  enable_lcd
+  enable_ppu
   ld a, INTR_STAT
   ldh (<IE), a
 
@@ -212,7 +212,7 @@ run_testcase:
   ld hl, nop_area_b
   call prepare_nop_area
 
-  enable_lcd
+  enable_ppu
   ; Enable sprites
   ld hl, LCDC
   set 1, (HL)
