@@ -167,4 +167,4 @@ CGB/AGB/AGS or emulators emulating those devices.**
 # License and copyright
 
 Mooneye Test Suite is licensed under MIT.
-Copyright (C) 2014-2021 Joonas Javanainen <joonas.javanainen@gmail.com>
+Copyright (C) 2014-2022 Joonas Javanainen <joonas.javanainen@gmail.com>
