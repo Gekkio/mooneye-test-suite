@@ -64,38 +64,52 @@ quit:
     ld h, 21
     ld l, 34
 
-    magic_breakpoint
-
-    ld a, b
-    call serial_send_byte
-    ld a, c
-    call serial_send_byte
-    ld a, d
-    call serial_send_byte
-    ld a, e
-    call serial_send_byte
-    ld a, h
-    call serial_send_byte
-    ld a, l
-    call serial_send_byte
-
-    jr @halt
+    jr @serial_dump
 
   @failure:
+    ld a, $42
+    ld b, a
+    ld c, a
+    ld d, a
+    ld e, a
+    ld h, a
+    ld l, a
+
+  @serial_dump:
     magic_breakpoint
 
-    ld a, $42
-    call serial_send_byte
-    ld a, $42
-    call serial_send_byte
-    ld a, $42
-    call serial_send_byte
-    ld a, $42
-    call serial_send_byte
-    ld a, $42
-    call serial_send_byte
-    ld a, $42
-    call serial_send_byte
+    call is_serial_broken
+    jr c, @fast
+
+    @normal:
+      ld a, b
+      call serial_send_byte
+      ld a, c
+      call serial_send_byte
+      ld a, d
+      call serial_send_byte
+      ld a, e
+      call serial_send_byte
+      ld a, h
+      call serial_send_byte
+      ld a, l
+      call serial_send_byte
+
+      jr @halt
+
+    @fast:
+      ld a, b
+      ldh (<SB), a
+      ld a, c
+      ldh (<SB), a
+      ld a, d
+      ldh (<SB), a
+      ld a, e
+      ldh (<SB), a
+      ld a, h
+      ldh (<SB), a
+      ld a, l
+      ldh (<SB), a
 
   @halt:
     halt_execution
