@@ -82,19 +82,14 @@ run_tests:
   ret
 
 fail:
-  di
-  ld sp, $fffe
-  call disable_ppu_safe
-  call reset_screen
-  call print_load_font
+  quit_inline
 
   ldh a, (<hram.testcase_h)
-  ld h, a
+  ld d, a
   ldh a, (<hram.testcase_l)
-  ld l, a
-  push hl
+  ld e, a
 
-  ld hl, $9820
+  call print_newline
   print_string_literal "Test failed"
 
   call print_newline
@@ -103,17 +98,13 @@ fail:
   call print_newline
 
   print_string_literal "A: "
-  pop bc
-  ld a, (bc)
-  inc bc
-  push bc
+  ld a, (de)
+  inc de
   call print_hex8
 
   print_string_literal " F: "
-  pop bc
-  ld a, (bc)
-  inc bc
-  push bc
+  ld a, (de)
+  inc de
   call print_bin4
 
   call print_newline
@@ -122,17 +113,13 @@ fail:
   call print_newline
 
   print_string_literal "A: "
-  pop bc
-  ld a, (bc)
-  inc bc
-  push bc
+  ld a, (de)
+  inc de
   call print_hex8
 
   print_string_literal " F: "
-  pop bc
-  ld a, (bc)
-  inc bc
-  push bc
+  ld a, (de)
+  inc de
   call print_bin4
 
   call print_newline
@@ -149,9 +136,8 @@ fail:
   swap a
   call print_bin4
 
-  enable_ppu
-  wait_vblank
-  halt_execution
+  ld d, $42
+  ret
 
 .bank 0 slot 0
 .section "testcases1"
