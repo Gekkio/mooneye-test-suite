@@ -54,7 +54,7 @@ sgb+sgb2.
 
 ## Pass/fail reporting
 
-Most tests report a single pass/fail state using [a simple protocol](https://github.com/Gekkio/mooneye-test-suite/blob/1fbf1f76fcf9f1fc6a6023d9a141a826965133e8/common/lib/quit.s#L49) which is
+Most tests report a single pass/fail state using [a simple protocol](https://github.com/Gekkio/mooneye-test-suite/blob/a2dac64c1c17b4efb98e168ab0ad3beaae6bff4c/common/lib/quit.s#L58) which is
 designed to make it easy to detect the test result in both emulators and real
 hardware. On real hardware you can use the link port to read data sent by the
 test ROM. In emulators you can either use the link port, or detect the
@@ -66,11 +66,18 @@ A passing test:
 - writes the Fibonacci numbers 3/5/8/13/21/34 to the registers B/C/D/E/H/L
 - executes an `LD B, B` opcode
 - sends the same Fibonacci numbers using the link port. In emulators, the serial interrupt doesn't need to be implemented since the mechanism uses busy looping to wait for the transfer to complete instead of relying on the interrupt
+- executes an `LD B, B` opcode, followed by an infinite JR loop (JR pointing to itself)
 
 A failing test:
 
-- executes an `LD B, B` opcode, but the B/C/D/E/H/L registers won't contain the "magic" Fibonacci numbers
+- writes the byte `0x42` to the registers B/C/D/E/H/L
+- executes an `LD B, B` opcode
 - sends the byte `0x42` 6 times using the serial port
+- executes an `LD B, B` opcode, followed by an infinite JR loop (JR pointing to itself)
+
+If you don't have a full Game boy system, pass/fail reporting can be sped up by
+making sure LY (0xff44) and SC (0xff01) both return 0xff when read. This will
+bypass some unnecessary drawing code and waiting for serial transfer to finish.
 
 ## Hardware testing
 
