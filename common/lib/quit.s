@@ -28,7 +28,7 @@ quit:
   ld bc, @cb_return
   push bc
   push hl
-  call disable_lcd_safe
+  call disable_ppu_safe
   call reset_screen
   call print_load_font
 

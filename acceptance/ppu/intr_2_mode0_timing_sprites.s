@@ -41,7 +41,7 @@
 
   ld sp, DEFAULT_SP
 
-  call disable_lcd_safe
+  call disable_ppu_safe
   call reset_screen
   call print_load_font
 
@@ -199,7 +199,7 @@ run_testcase:
   push de
   push hl
   wait_vblank
-  disable_lcd
+  disable_ppu
   call clear_oam
 
   pop de

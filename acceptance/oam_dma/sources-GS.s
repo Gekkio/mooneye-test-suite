@@ -32,7 +32,7 @@
 
   ld sp, $ffff
 
-  call disable_lcd_safe
+  call disable_ppu_safe
   call clear_oam
   call clear_vram
   call clear_wram

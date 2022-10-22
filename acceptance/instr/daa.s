@@ -84,7 +84,7 @@ run_tests:
 fail:
   di
   ld sp, $fffe
-  call disable_lcd_safe
+  call disable_ppu_safe
   call reset_screen
   call print_load_font
 

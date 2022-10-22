@@ -37,7 +37,7 @@
 
   ld sp, DEFAULT_SP
 
-  call disable_lcd_safe
+  call disable_ppu_safe
   call clear_vram
   call clear_oam
 
@@ -247,7 +247,7 @@ test_pass1:
   ld a, $81
   ldh (<LCDC), a
   test_reads
-  call disable_lcd_safe
+  call disable_ppu_safe
 
 test_pass2:
   ld hl, hram.pass2_results
@@ -255,7 +255,7 @@ test_pass2:
   ldh (<LCDC), a
   nops 1
   test_reads
-  call disable_lcd_safe
+  call disable_ppu_safe
 
 test_pass3:
   ld hl, hram.pass3_results
@@ -263,6 +263,6 @@ test_pass3:
   ldh (<LCDC), a
   nops 2
   test_reads
-  jp disable_lcd_safe
+  jp disable_ppu_safe
 
 .ends

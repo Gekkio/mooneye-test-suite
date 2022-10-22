@@ -29,7 +29,7 @@
 
   ld sp, DEFAULT_SP
 
-  call disable_lcd_safe
+  call disable_ppu_safe
   call clear_vram
   call clear_oam
 
@@ -230,7 +230,7 @@ test_case:
 
   pop de
   call wram.test_code
-  call disable_lcd_safe
+  call disable_ppu_safe
 
   pop hl
   ld a, (de)

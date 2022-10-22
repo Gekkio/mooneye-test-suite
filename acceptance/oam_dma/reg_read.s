@@ -30,7 +30,7 @@
 
   ld sp, DEFAULT_SP
 
-  call disable_lcd_safe
+  call disable_ppu_safe
 
 ; First, a simple case where we let the transfer finish and then do the read
 ; Two rounds to ensure the value really changes on each write.

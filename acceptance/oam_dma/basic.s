@@ -28,7 +28,7 @@
 
   ld sp, DEFAULT_SP
 
-  call disable_lcd_safe
+  call disable_ppu_safe
   call clear_oam
 
   ld hl, hram.dma_proc

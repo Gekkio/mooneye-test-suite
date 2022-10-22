@@ -83,7 +83,7 @@
 .include "lib/clear_oam.s"
 .include "lib/clear_vram.s"
 .include "lib/clear_wram.s"
-.include "lib/disable_lcd_safe.s"
+.include "lib/disable_ppu_safe.s"
 .include "lib/memcmp.s"
 .include "lib/memcpy.s"
 .include "lib/memset.s"

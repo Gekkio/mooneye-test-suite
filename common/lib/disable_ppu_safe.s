@@ -18,11 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-.section "disable_lcd_safe"
+.section "disable_ppu_safe"
 ; Inputs: -
 ; Outputs: -
 ; Preserved: BC, DE
-disable_lcd_safe:
+disable_ppu_safe:
   ld hl, LCDC
   bit 7, (hl)
   ret z

@@ -45,7 +45,7 @@
 .endm
 
   di
-  call disable_lcd_safe
+  call disable_ppu_safe
 
   ld hl, VRAM
   ld bc, OAM_LEN
@@ -98,7 +98,7 @@ finish_round1:
   ld sp, $FFFE
 
 test_round2:
-  call disable_lcd_safe
+  call disable_ppu_safe
 
   ld hl, vector_10
   ld a, <fail_round2

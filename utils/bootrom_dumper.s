@@ -82,7 +82,7 @@ finish:
     cp 144
     jr nz, @wait_vblank
 
-  @disable_lcd:
+  @disable_ppu:
     ld a, %00000001
     ldh (<LCDC), a
 
