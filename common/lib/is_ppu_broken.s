@@ -18,15 +18,14 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-.section "disable_ppu_safe"
+.section "is_ppu_broken"
 ; Inputs: -
 ; Outputs:
-; Preserved: BC, DE
-disable_ppu_safe:
-  ld hl, LCDC
-  bit 7, (hl)
-  ret z
-  wait_ly 144
-  res 7, (hl)
+;   cf 0 if PPU seems ok, 1 if PPU seems missing/broken
+; Preserved: BC, DE, HL
+is_ppu_broken:
+  ldh a, (<LY)
+  sub 160 ; LY < 160 => cf=1
+  ccf     ; LY < 160 => cf=0
   ret
 .ends

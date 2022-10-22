@@ -28,20 +28,29 @@ quit:
   ld bc, @cb_return
   push bc
   push hl
+  call is_ppu_broken
+  jr c, @callback
+
   call disable_ppu_safe
   call reset_screen
   call print_load_font
 
-  ld hl, $9800
-  ; this is basically "call cb" since callback pointer is on the stack,
-  ; followed by the return address
-  ret
+  @callback:
+    ld hl, $9800
+    ; this is basically "call cb" since callback pointer is on the stack,
+    ; followed by the return address
+    ret
 
   @cb_return:
+    call is_ppu_broken
+    jr c, @report_result
+
     enable_ppu
     wait_vblank
     ; Extra vblank to account for initial (invisible) frame
     wait_vblank
+
+  @report_result:
     ld a, d
     and a
     jr nz, @failure
