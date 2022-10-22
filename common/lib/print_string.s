@@ -32,6 +32,14 @@ print_string:
   and a
   ret z
 
-  ld (hl+), a
-  jr -
+  cp $0a
+  jr z, @newline
+
+  @char:
+    ld (hl+), a
+    jr -
+
+  @newline:
+    call print_newline
+    jr -
 .ends
