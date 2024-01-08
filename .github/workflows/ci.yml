@@ -1,9 +1,6 @@
 name: ci
 on:
-  pull_request:
-  push:
-    branches:
-    - main
+  - push
 
 jobs:
   build:
@@ -14,18 +11,17 @@ jobs:
       WLA_DX_COMMIT: d8b51a99ff1d8c9cb64ba4db90191718508f9c98
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Update Ubuntu package lists
         run: sudo apt update
-        if: runner.os == 'Linux'
       - name: Install Ubuntu packages
         run: sudo apt install cmake
       - name: Cache wla-dx
         id: cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/wla-dx
-          key: ${{ runner.os }}-${{ env.WLA_DX_COMMIT }}-wla-dx
+          key: wla-dx-${{ env.WLA_DX_COMMIT }}
       - name: Build wla-dx
         if: steps.cache.outputs.cache-hit != 'true'
         run: .github/scripts/install_wla-dx.sh
@@ -35,7 +31,7 @@ jobs:
           WLA: ~/wla-dx/binaries/wla-gb
           WLALINK: ~/wla-dx/binaries/wlalink
       - name: Persist built test ROMs
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: tests
           path: build
@@ -46,7 +42,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Update Ubuntu package lists
         run: sudo apt update
       - name: Install Ubuntu packages
@@ -58,13 +54,13 @@ jobs:
           chmod +x "$HOME/bin/s3-indexer"
           echo "$HOME/bin" >> $GITHUB_PATH
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
       - name: Download built test ROMs
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: tests
           path: build
