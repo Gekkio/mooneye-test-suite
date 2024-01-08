@@ -86,7 +86,7 @@ test_round3:
   call check_bank_data
   jp c, fail_round3
 
-; Switching RAM banks shouldn't have an effect because we only have one bank in mode 1
+; Switching RAM banks shouldn't have an effect because we only have one bank in mode 0
 test_round4:
   xor a
   ld ($6000), a
