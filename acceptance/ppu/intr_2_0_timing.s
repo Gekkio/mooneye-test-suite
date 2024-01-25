@@ -18,7 +18,7 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-; Tests how long does it take to get from STAT mode=1 interrupt to STAT mode=2 interrupt
+; Tests how long does it take to get from STAT mode=2 interrupt to STAT mode=0 interrupt
 ; No sprites, scroll or window.
 
 ; Verified results:
