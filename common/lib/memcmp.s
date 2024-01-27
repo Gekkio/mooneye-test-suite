@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "memcmp" FORCE
+.else
 .section "memcmp"
+.endif
 ; Inputs:
 ;   HL source 1
 ;   DE source 2

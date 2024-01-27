@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "reset_screen" FORCE
+.else
 .section "reset_screen"
+.endif
 ; Inputs: -
 ; Outputs: -
 reset_screen:

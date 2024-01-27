@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "print_load_font" FORCE
+.else
 .section "print_load_font"
+.endif
 ; Inputs: -
 ; Outputs: -
 ; Preserved: -

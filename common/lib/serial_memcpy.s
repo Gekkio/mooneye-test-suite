@@ -1,4 +1,4 @@
-; Copyright (C) 2014-2022 Joonas Javanainen <joonas.javanainen@gmail.com>
+; Copyright (C) 2014-2024 Joonas Javanainen <joonas.javanainen@gmail.com>
 ;
 ; Permission is hereby granted, free of charge, to any person obtaining a copy
 ; of this software and associated documentation files (the "Software"), to deal
@@ -19,17 +19,21 @@
 ; SOFTWARE.
 
 .ifdef FORCE_SECTIONS
-.section "is_ppu_broken" FORCE
+.section "serial_memcpy" FORCE
 .else
-.section "is_ppu_broken"
+.section "serial_memcpy"
 .endif
-; Inputs: -
-; Outputs:
-;   cf 0 if PPU seems ok, 1 if PPU seems missing/broken
-; Preserved: BC, DE, HL
-is_ppu_broken:
-  ldh a, (<LY)
-  sub 160 ; LY < 160 => cf=1
-  ccf     ; LY < 160 => cf=0
-  ret
+; Inputs:
+;   DE source
+;   BC length
+; Preserved: -
+serial_memcpy:
+- ld a, b
+  or c
+  ret z
+  ld a, (de)
+  call serial_send_byte
+  inc de
+  dec bc
+  jr -
 .ends

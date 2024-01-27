@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "is_serial_broken" FORCE
+.else
 .section "is_serial_broken"
+.endif
 ; Inputs: -
 ; Outputs:
 ;   cf 0 if serial seems ok, 1 if it seems missing/broken

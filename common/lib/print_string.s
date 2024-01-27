@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "print_string" FORCE
+.else
 .section "print_string"
+.endif
 ; Inputs:
 ;   BC pointer to string
 ;   HL pointer

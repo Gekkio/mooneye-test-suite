@@ -18,19 +18,32 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "serial_send_byte" FORCE
+.else
 .section "serial_send_byte"
+.endif
 ; Inputs:
 ;   A: byte to send
 serial_send_byte:
   ldh (<SB), a
-  ld a, $81
+  ld a, $83
   ldh (<SC), a
 
-  ; TODO: optimize this delay
-  xor a
-- dec a
-  nops 4
+  ld a, $12 ; TODO: optimize this delay
+- ldh (<hram.serial_timeout), a
+
+  ldh a, (<SC)
+  rla
+  ret nc
+
+  ldh a, (<hram.serial_timeout)
+  dec a
   jr nz, -
 
   ret
+.ends
+
+.ramsection "Runtime-Serial" slot HRAM_SLOT
+  hram.serial_timeout db
 .ends

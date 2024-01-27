@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "print_bin4" FORCE
+.else
 .section "print_bin4"
+.endif
 ; Inputs:
 ;   A value
 ;   HL pointer

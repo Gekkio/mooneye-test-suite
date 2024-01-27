@@ -1,4 +1,4 @@
-; Copyright (C) 2014-2022 Joonas Javanainen <joonas.javanainen@gmail.com>
+; Copyright (C) 2014-2024 Joonas Javanainen <joonas.javanainen@gmail.com>
 ;
 ; Permission is hereby granted, free of charge, to any person obtaining a copy
 ; of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,40 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-.include "hardware.s"
+; Boot ROM dump utility intended to be used with some kind of external glitch
+; mechanism to prevent the boot ROM from disabling itself.
 
-.rombanksize $4000
+; Copies $0000-$08FF to cartridge RAM and serial out, with $0100-$0200 already
+; set to $00 for convenience.
+; If boot ROM has been disabled (= glitch has failed):
+;   - plays one low beep and shows a sad face
+; If boot ROM has not been disabled (= glitch has succeeded):
+;   - plays two high beeps and shows a happy face
+
+; The face might not always appear if the glitch has upset the PPU too much, but
+; the audio is a quite good indicator of success/failure. However, if you get
+; *very* unlucky, the CPU might jump directly to the end where the audio is played
+; but the data is never copied. If this happens, just try again.
+
+.include "hardware.s"
+.include "macros.s"
+
+; RAMG address must be outside boot ROM area(s), or any writes to it won't be
+; seen by the cartridge
+.define RAMG $1000
+
 .rombanks 4
-.ramsize 1
 .emptyfill $00
 
 .gbheader
   name "DUMPER"
   licenseecodeold $42
-  cartridgetype 3 ; MBC1/RAM/battery
+  cartridgetype $03 ; MBC1/RAM/battery
   destinationcode $00
   nintendologo
-  romdmg
+  romsize
+  ramsize 2
+  romgbc
 .endgb
 
 .bank 0 slot 0
@@ -45,17 +65,27 @@
 
 enable_cartridge_ram:
   ld a, $0a
-  ld ($1000), a
+  ld (RAMG), a
 
-copy_data:
+copy_to_cartridge_ram:
   ld hl, $a000
   ld de, $0000
-  ld bc, $100
+  ld bc, $0100
+  call memcpy
+
+  ld hl, $a100
+  ld bc, $0100
+  xor a
+  call memset
+
+  ld hl, $a200
+  ld de, $0200
+  ld bc, $0700
   call memcpy
 
 disable_cartridge_ram:
   xor a
-  ld ($1000), a
+  ld (RAMG), a
 
 compare_data:
   ld hl, $0000
@@ -64,36 +94,22 @@ compare_data:
 - ld a, (hl+)
   dec c
   jr z, finish
-  cp $00
+  or a
   jr z, -
 
 finish:
-  ld sp, $ffff
+  ld sp, $e000
   ld a, c
-  ldh ($80), a
+  or a
+  jr z, +
+  ld a, %1
++ ldh (<hram.is_success), a
 
-  @check_ppu:
-    ldh a, (<LCDC)
-    and %10000000
-    jr z, @clear_tilemap
-
-  @wait_vblank:
-    ldh a, (<LY)
-    cp 144
-    jr nz, @wait_vblank
-
-  @disable_ppu:
-    ld a, %00000001
-    ldh (<LCDC), a
-
-  @clear_tilemap:
-    xor a
-    ld hl, $9800
-    ld bc, $400
-    call memset
+  call disable_ppu_safe
+  call reset_screen
 
   @choose_tilemap:
-    ldh a, ($80)
+    ldh a, (<hram.is_success)
     or a
     jr nz, +
     ld de, tilemap_sadface
@@ -109,23 +125,19 @@ finish:
     pop af
     dec a
     and a
-    jr z, @clear_tiles
+    jr z, @setup_tile
     ld bc, 12
     add hl, bc
     ld b, a
     jr -
-
-  @clear_tiles:
-    xor a
-    ld hl, $8000
-    ld bc, $1000
-    call memset
 
   @setup_tile:
     ld a, $ff
     ld hl, $8ff0
     ld bc, 16
     call memset
+
+  enable_ppu
 
   @setup_audio:
     ld a, $ff
@@ -141,56 +153,61 @@ finish:
     xor a
     ldh (<NR13), a
 
-  @enable_ppu:
-    ld hl, LCDC
-    set 7, (hl)
-
-  ldh a, ($80)
+  ldh a, (<hram.is_success)
   or a
-  jr nz, +
+  jr nz, success
+
+failure:
   ld a, $C0
-  jr ++
-+ ld a, $C7
-++
+  ldh (<NR14), a
+  jr end
+
+success:
+  ld a, $C7
   ldh (<NR14), a
 
-- halt
-  nop
-  jr -
-
-; Inputs:
-;   HL target
-;   DE source
-;   BC length
-; Outputs:
-;   HL target + length
-; Preserved: -
-memcpy:
+  ld bc, $3000
 - ld a, b
   or c
-  ret z
-  ld a, (de)
-  ld (hl+), a
-  inc de
+  jr z, ++
   dec bc
   jr -
 
-; Inputs:
-;   HL target
-;   A value
-;   BC length
-; Outputs:
-;   HL target + number of bytes
-; Preserved: E
-memset:
-  ld d, a
+++
+  ld a, $9F
+  ldh (<NR11), a
+  ld a, $F8
+  ldh (<NR12), a
+  ld a, $20
+  ldh (<NR13), a
+  ld a, $C7
+  ldh (<NR14), a
+
+end:
+  call copy_to_serial
+  halt_execution
+
+copy_to_serial:
+  call is_serial_broken
+  ret c
+
+  ld de, $0000
+  ld bc, $0100
+  call serial_memcpy
+
+  ld bc, $0100
 - ld a, b
   or c
-  ret z
-  ld a, d
-  ld (hl+), a
+  jr z, ++
+  xor a
+  call serial_send_byte
   dec bc
   jr -
+
+++
+  ld de, $0200
+  ld bc, $0700
+  jp serial_memcpy
 
 tilemap_happyface:
   .db $00 $00 $00 $00 $FF $FF $00 $00 $00 $00 $00 $00 $00 $00 $FF $FF $00 $00 $00 $00
@@ -216,5 +233,20 @@ tilemap_sadface:
   .db $00 $00 $00 $00 $FF $FF $00 $00 $00 $00 $00 $00 $00 $00 $FF $FF $00 $00 $00 $00
   .db $00 $00 $00 $FF $FF $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $FF $FF $00 $00 $00
 
+.define CART_CGB
+.define FORCE_SECTIONS
+.include "lib/clear_vram.s"
+.include "lib/disable_ppu_safe.s"
+.include "lib/is_serial_broken.s"
+.include "lib/memcpy.s"
+.include "lib/memset.s"
+.include "lib/reset_screen.s"
+.include "lib/serial_memcpy.s"
+.include "lib/serial_send_byte.s"
+
 .org $4000 - 3
   jp $7D00
+
+.ramsection "HRAM" slot HRAM_SLOT
+  hram.is_success db
+.ends

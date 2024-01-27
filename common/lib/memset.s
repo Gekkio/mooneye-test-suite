@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "memset" FORCE
+.else
 .section "memset"
+.endif
 ; Inputs:
 ;   HL target
 ;   A value

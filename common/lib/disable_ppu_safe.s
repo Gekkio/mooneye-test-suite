@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "disable_ppu_safe" FORCE
+.else
 .section "disable_ppu_safe"
+.endif
 ; Inputs: -
 ; Outputs:
 ; Preserved: BC, DE

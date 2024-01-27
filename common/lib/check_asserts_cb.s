@@ -87,7 +87,11 @@
   set 7, (hl)
 .endm
 
+.ifdef FORCE_SECTIONS
+.section "check_asserts_cb" FORCE
+.else
 .section "check_asserts_cb"
+.endif
 check_asserts_cb:
   ld de, hram.regs_save
   call print_newline

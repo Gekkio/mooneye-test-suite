@@ -18,7 +18,11 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+.ifdef FORCE_SECTIONS
+.section "print_reg_dump" FORCE
+.else
 .section "print_reg_dump"
+.endif
 ; Inputs:
 ;   DE pointer to reg_dump
 ; Outputs: -
