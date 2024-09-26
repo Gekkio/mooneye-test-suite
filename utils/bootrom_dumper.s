@@ -243,6 +243,7 @@ tilemap_sadface:
 .include "lib/reset_screen.s"
 .include "lib/serial_memcpy.s"
 .include "lib/serial_send_byte.s"
+.include "lib/wait_ly_with_timeout.s"
 
 .org $4000 - 3
   jp $7D00

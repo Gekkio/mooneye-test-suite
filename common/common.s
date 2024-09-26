@@ -103,6 +103,7 @@
 .include "lib/quit_dump_mem.s"
 .include "lib/reset_screen.s"
 .include "lib/serial_send_byte.s"
+.include "lib/wait_ly_with_timeout.s"
 
 ; --- Cartridge header ---
 

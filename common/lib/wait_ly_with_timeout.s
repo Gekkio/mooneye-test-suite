@@ -1,4 +1,4 @@
-; Copyright (C) 2014-2022 Joonas Javanainen <joonas.javanainen@gmail.com>
+; Copyright (C) 2014-2024 Joonas Javanainen <joonas.javanainen@gmail.com>
 ;
 ; Permission is hereby granted, free of charge, to any person obtaining a copy
 ; of this software and associated documentation files (the "Software"), to deal
@@ -19,22 +19,27 @@
 ; SOFTWARE.
 
 .ifdef FORCE_SECTIONS
-.section "disable_ppu_safe" FORCE
+.section "wait_ly_with_timeout" FORCE
 .else
-.section "disable_ppu_safe"
+.section "wait_ly_with_timeout"
 .endif
-; Inputs: -
+; Inputs:
+;   A expected LY value
 ; Outputs:
-; Preserved: BC, DE
-disable_ppu_safe:
-  ld hl, LCDC
-  bit 7, (hl)
-  ret z
+;   cf 0 if LY value was seen, 1 if the wait timed out
+; Preserved: E, HL
+wait_ly_with_timeout:
+  ld d, a
+  ld bc, $0000
+- ldh a, (<LY)
+  cp d
+  ret z ; cf=0 if the right LY value was seen
+  inc bc
+  ld a, b
+  or c
+  jr nz, -
 
-  push de
-  ld a, 144
-  call wait_ly_with_timeout
-  res 7, (hl)
-  pop de
-  ret
+  @timeout:
+    scf
+    ret
 .ends

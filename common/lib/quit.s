@@ -46,15 +46,25 @@ quit:
     ret
 
   @cb_return:
+    push de
     call is_ppu_broken
     jr c, @report_result
 
     enable_ppu
-    wait_vblank
+
+    ld a, 143
+    call wait_ly_with_timeout
+    jr c, @report_result
+    ld a, 144
+    call wait_ly_with_timeout
     ; Extra vblank to account for initial (invisible) frame
-    wait_vblank
+    ld a, 143
+    call wait_ly_with_timeout
+    ld a, 144
+    call wait_ly_with_timeout
 
   @report_result:
+    pop de
     ld a, d
     and a
     jr nz, @failure
