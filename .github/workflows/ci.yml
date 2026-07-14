@@ -65,10 +65,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.S3_ENDPOINT }}
         run: |
           aws s3 cp mts-"${MTS_VERSION}".zip s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           aws s3 cp mts-"${MTS_VERSION}".tar.gz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
           aws s3 cp mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
-          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --upload --region eu-west-1
-          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts" --title "Mooneye Test Suite" --upload --region eu-west-1
+          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --upload
+          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts" --title "Mooneye Test Suite" --upload
