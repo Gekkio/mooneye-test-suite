@@ -11,14 +11,14 @@ jobs:
       WLA_DX_COMMIT: 89a90a56be5c2b8cf19a9afa3e1b32384ddb1a97
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Update Ubuntu package lists
         run: sudo apt update
       - name: Install Ubuntu packages
         run: sudo apt install cmake
       - name: Cache wla-dx
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ~/wla-dx
           key: wla-dx-${{ env.WLA_DX_COMMIT }}
@@ -31,7 +31,7 @@ jobs:
           WLA: ~/wla-dx/binaries/wla-gb
           WLALINK: ~/wla-dx/binaries/wlalink
       - name: Persist built test ROMs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tests
           path: build
@@ -44,7 +44,7 @@ jobs:
       - name: Install Ubuntu packages
         run: sudo snap install aws-cli --classic
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install s3-indexer
         run: |
           mkdir -p "$HOME/bin"
@@ -52,7 +52,7 @@ jobs:
           chmod +x "$HOME/bin/s3-indexer"
           echo "$HOME/bin" >> $GITHUB_PATH
       - name: Download built test ROMs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: tests
           path: build
