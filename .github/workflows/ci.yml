@@ -68,8 +68,8 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
           AWS_ENDPOINT_URL_S3: ${{ secrets.S3_ENDPOINT }}
         run: |
-          aws s3 cp mts-"${MTS_VERSION}".zip s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
-          aws s3 cp mts-"${MTS_VERSION}".tar.gz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
-          aws s3 cp mts-"${MTS_VERSION}".tar.xz s3://mooneye.gekkio.fi/releases/mts/mts-"${MTS_VERSION}"/
-          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --upload
-          s3-indexer --bucket mooneye.gekkio.fi --prefix "releases/mts" --title "Mooneye Test Suite" --upload
+          aws s3 cp mts-"${MTS_VERSION}".zip s3://${{ secrets.S3_BUCKET }}/releases/mts/mts-"${MTS_VERSION}"/
+          aws s3 cp mts-"${MTS_VERSION}".tar.gz s3://${{ secrets.S3_BUCKET }}/releases/mts/mts-"${MTS_VERSION}"/
+          aws s3 cp mts-"${MTS_VERSION}".tar.xz s3://${{ secrets.S3_BUCKET }}/releases/mts/mts-"${MTS_VERSION}"/
+          s3-indexer --bucket ${{ secrets.S3_BUCKET }} --prefix "releases/mts/mts-${MTS_VERSION}" --title "Index of mts-${MTS_VERSION}" --upload
+          s3-indexer --bucket ${{ secrets.S3_BUCKET }} --prefix "releases/mts" --title "Mooneye Test Suite" --upload
